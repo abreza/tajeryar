@@ -1,5 +1,3 @@
-// Update src/app/page.tsx
-
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
@@ -30,7 +28,6 @@ export default function HomePage() {
     rejected: 0,
   });
 
-  // Load transactions from MongoDB
   const loadTransactions = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -50,7 +47,6 @@ export default function HomePage() {
     }
   }, []);
 
-  // Load stats
   const loadStats = useCallback(async () => {
     try {
       const response = await fetch("/f-api/transactions/stats");
@@ -66,7 +62,6 @@ export default function HomePage() {
     }
   }, []);
 
-  // Load data on mount
   useEffect(() => {
     loadTransactions();
     loadStats();
@@ -74,7 +69,6 @@ export default function HomePage() {
 
   const handleTransactionExtracted = useCallback(
     (transaction: Transaction, transcriptionText: string, audioBlob: Blob) => {
-      // Transaction is already saved in MongoDB, just update local state
       setTransactions((prev) => [transaction as TransactionWithAudio, ...prev]);
       loadStats();
       toast.success("معامله با موفقیت ثبت شد");

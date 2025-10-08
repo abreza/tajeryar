@@ -7,10 +7,11 @@ export const runtime = "nodejs";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const document = await TransactionModel.findById(params.id);
+    const { id } = await params;
+    const document = await TransactionModel.findById(id);
 
     if (!document) {
       return NextResponse.json({ error: "معامله یافت نشد" }, { status: 404 });
@@ -52,9 +53,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
 
     if (body.transaction) {
@@ -63,7 +65,7 @@ export async function PUT(
 
     const updates = body.transaction || body;
 
-    const document = await TransactionModel.update(params.id, updates);
+    const document = await TransactionModel.update(id, updates);
 
     if (!document) {
       return NextResponse.json({ error: "معامله یافت نشد" }, { status: 404 });
@@ -105,10 +107,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const document = await TransactionModel.findById(params.id);
+    const { id } = await params;
+    const document = await TransactionModel.findById(id);
 
     if (!document) {
       return NextResponse.json({ error: "معامله یافت نشد" }, { status: 404 });
@@ -125,7 +128,7 @@ export async function DELETE(
       }
     }
 
-    const deleted = await TransactionModel.delete(params.id);
+    const deleted = await TransactionModel.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "خطا در حذف معامله" }, { status: 500 });
